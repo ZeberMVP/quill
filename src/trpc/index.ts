@@ -4,6 +4,9 @@ import { TRPCError } from '@trpc/server'
 import { db } from '@/db'
 import { z } from 'zod'
 import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query'
+import { absoluteUrl } from '@/lib/utils'
+import { getUserSubscriptionPlan, stripe } from '@/lib/stripe'
+import { PLANS } from '@/config/stripe'
 
 export const appRouter = router({
 	authCallback: publicProcedure.query(async () => {
@@ -12,12 +15,15 @@ export const appRouter = router({
 
 		if (!user.id || !user.email) throw new TRPCError({ code: 'UNAUTHORIZED' })
 
-		// check if user is in database
+		// check if the user is in the database
 		const dbUser = await db.user.findFirst({
-			where: { id: user.id },
+			where: {
+				id: user.id,
+			},
 		})
 
 		if (!dbUser) {
+			// create user in db
 			await db.user.create({
 				data: {
 					id: user.id,
@@ -29,13 +35,61 @@ export const appRouter = router({
 		return { success: true }
 	}),
 	getUserFiles: privateProcedure.query(async ({ ctx }) => {
-		const { user, userId } = ctx
+		const { userId } = ctx
+
 		return await db.file.findMany({
 			where: {
 				userId,
 			},
 		})
 	}),
+
+	createStripeSession: privateProcedure.mutation(async ({ ctx }) => {
+		const { userId } = ctx
+
+		const billingUrl = absoluteUrl('/dashboard/billing')
+
+		if (!userId) throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+		const dbUser = await db.user.findFirst({
+			where: {
+				id: userId,
+			},
+		})
+
+		if (!dbUser) throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+		const subscriptionPlan = await getUserSubscriptionPlan()
+
+		if (subscriptionPlan.isSubscribed && dbUser.stripeCustomerId) {
+			const stripeSession = await stripe.billingPortal.sessions.create({
+				customer: dbUser.stripeCustomerId,
+				return_url: billingUrl,
+			})
+
+			return { url: stripeSession.url }
+		}
+
+		const stripeSession = await stripe.checkout.sessions.create({
+			success_url: billingUrl,
+			cancel_url: billingUrl,
+			payment_method_types: ['card', 'paypal'],
+			mode: 'subscription',
+			billing_address_collection: 'auto',
+			line_items: [
+				{
+					price: PLANS.find((plan) => plan.name === 'Pro')?.price.priceIds.test,
+					quantity: 1,
+				},
+			],
+			metadata: {
+				userId: userId,
+			},
+		})
+
+		return { url: stripeSession.url }
+	}),
+
 	getFileMessages: privateProcedure
 		.input(
 			z.object({
@@ -86,6 +140,7 @@ export const appRouter = router({
 				nextCursor,
 			}
 		}),
+
 	getFileUploadStatus: privateProcedure
 		.input(z.object({ fileId: z.string() }))
 		.query(async ({ input, ctx }) => {
@@ -100,6 +155,7 @@ export const appRouter = router({
 
 			return { status: file.uploadStatus }
 		}),
+
 	getFile: privateProcedure
 		.input(z.object({ key: z.string() }))
 		.mutation(async ({ ctx, input }) => {
@@ -116,6 +172,7 @@ export const appRouter = router({
 
 			return file
 		}),
+
 	deleteFile: privateProcedure
 		.input(z.object({ id: z.string() }))
 		.mutation(async ({ ctx, input }) => {
