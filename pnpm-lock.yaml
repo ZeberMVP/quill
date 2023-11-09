@@ -61,7 +61,7 @@ dependencies:
     version: 10.38.5
   '@uploadthing/react':
     specifier: 5.6.2
-    version: 5.6.2(next@13.5.3)(react@18.2.0)(uploadthing@5.7.0)(zod@3.21.4)
+    version: 5.6.2(next@13.5.3)(react@18.2.0)(uploadthing@5.7.0)(zod@3.22.3)
   ai:
     specifier: 2.2.14
     version: 2.2.14(react@18.2.0)(solid-js@1.7.12)(svelte@4.2.1)(vue@3.3.4)
@@ -130,10 +130,10 @@ dependencies:
     version: 1.0.7(tailwindcss@3.3.3)
   uploadthing:
     specifier: 5.7.0
-    version: 5.7.0(zod@3.21.4)
+    version: 5.7.0(zod@3.22.3)
   zod:
-    specifier: 3.21.4
-    version: 3.21.4
+    specifier: 3.22.3
+    version: 3.22.3
 
 devDependencies:
   '@types/node':
@@ -1568,7 +1568,7 @@ packages:
     resolution: {integrity: sha512-UDySsPbdi7wp52WG7mp5CiZwaTvokDubqhm1xhFm73Bqhp0PsGbwSSF5PdCXH4fe8Y4EKGrMyWQ4i1fF9+DVVQ==}
     dev: false
 
-  /@uploadthing/react@5.6.2(next@13.5.3)(react@18.2.0)(uploadthing@5.7.0)(zod@3.21.4):
+  /@uploadthing/react@5.6.2(next@13.5.3)(react@18.2.0)(uploadthing@5.7.0)(zod@3.22.3):
     resolution: {integrity: sha512-zW++ZJiIthEjcn0ZD5cYfQ+NR8Ez4P47gm7VNsAOeMmFz66JzdllHJ4AXQ9bnWl31M8L7mqxUrNlEc3jSd7CMg==}
     peerDependencies:
       next: '*'
@@ -1578,19 +1578,19 @@ packages:
       next:
         optional: true
     dependencies:
-      '@uploadthing/shared': 5.2.3(@uploadthing/mime-types@0.2.1)(zod@3.21.4)
+      '@uploadthing/shared': 5.2.3(@uploadthing/mime-types@0.2.1)(zod@3.22.3)
       attr-accept: 2.2.2
       file-selector: 0.6.0
       next: 13.5.3(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       tailwind-merge: 1.14.0
-      uploadthing: 5.7.0(zod@3.21.4)
+      uploadthing: 5.7.0(zod@3.22.3)
     transitivePeerDependencies:
       - '@uploadthing/mime-types'
       - zod
     dev: false
 
-  /@uploadthing/shared@5.2.3(@uploadthing/mime-types@0.2.1)(zod@3.21.4):
+  /@uploadthing/shared@5.2.3(@uploadthing/mime-types@0.2.1)(zod@3.22.3):
     resolution: {integrity: sha512-45GEYfiP7ziLHtE3Tbb+X5FayNOgTstPIxNydbo9D33ZOWtqJknA9KNaSB8JpuEONGVbXjAfNNYkOUVXwb8dAQ==}
     peerDependencies:
       '@uploadthing/mime-types': ^0.2.0
@@ -1600,7 +1600,7 @@ packages:
         optional: true
     dependencies:
       '@uploadthing/mime-types': 0.2.1
-      zod: 3.21.4
+      zod: 3.22.3
     dev: false
 
   /@vue/compiler-core@3.3.4:
@@ -3014,6 +3014,7 @@ packages:
 
   /glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    requiresBuild: true
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -5633,12 +5634,12 @@ packages:
       picocolors: 1.0.0
     dev: true
 
-  /uploadthing@5.7.0(zod@3.21.4):
+  /uploadthing@5.7.0(zod@3.22.3):
     resolution: {integrity: sha512-x24qDWz7L4XQvWCFujzhguWW0tqh3j3QCQUOVpPHUMM5nv3aeJkVMQYURsAJydiBtMgiAGo7HnzEZLiPJSozXw==}
     engines: {node: '>=18.13.0'}
     dependencies:
       '@uploadthing/mime-types': 0.2.1
-      '@uploadthing/shared': 5.2.3(@uploadthing/mime-types@0.2.1)(zod@3.21.4)
+      '@uploadthing/shared': 5.2.3(@uploadthing/mime-types@0.2.1)(zod@3.22.3)
     transitivePeerDependencies:
       - zod
     dev: false
